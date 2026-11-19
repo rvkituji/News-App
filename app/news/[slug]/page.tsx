@@ -10,6 +10,8 @@ type Props = {
   }>;
 };
 
+export const instant = false;
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
