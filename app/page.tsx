@@ -1,11 +1,9 @@
-
 "use client";
 
 import { useState } from "react";
-import data from "@/app/data/news.json";
-import { ArticleCard } from "@/app/components/ArticleCard";
+import data from "@/data/news.json";
+import { ArticleCard } from "@/components/ArticleCard";
 import Link from "next/link";
-
 
 const categories = [
   "All stories",
@@ -18,7 +16,6 @@ const categories = [
   "Business",
 ];
 
-
 const Home = () => {
   const [activeCategory, setActiveCategory] = useState("All stories");
 
@@ -27,7 +24,7 @@ const Home = () => {
       ? data
       : data.filter(
           (article) =>
-            article.category.toLowerCase() === activeCategory.toLowerCase()
+            article.category.toLowerCase() === activeCategory.toLowerCase(),
         );
 
   return (
@@ -50,7 +47,6 @@ const Home = () => {
 
       <div className="w-full h-px bg-[#e2e2da]" />
 
-      
       <nav className="flex items-center gap-3 sm:gap-4 py-5 overflow-x-auto whitespace-nowrap scrollbar-hide">
         {categories.map((category) => (
           <button
@@ -68,7 +64,6 @@ const Home = () => {
         ))}
       </nav>
 
-      
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {filteredArticles.length > 0 ? (
           filteredArticles.map((article) => (
@@ -81,7 +76,6 @@ const Home = () => {
         )}
       </section>
 
-     
       <footer>
         <div className="w-full h-px bg-[#e2e2da] my-[20px]" />
 

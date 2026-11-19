@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import data from "@/app/data/news.json";
+import data from "@/data/news.json";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArticleCard } from "@/app/components/ArticleCard";
+import { ArticleCard } from "@/components/ArticleCard";
 
 type Props = {
   params: Promise<{
