@@ -1,13 +1,46 @@
+import type { Metadata } from "next";
 import data from "@/app/data/news.json";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/app/components/ArticleCard";
 
-const ArticleDetailPage = async ({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  const article = data.find((item) => item.slug === slug);
+
+  if (!article) {
+    return {
+      title: "Article Not Found | The Daily",
+    };
+  }
+
+  return {
+    title: `${article.title} | The Daily`,
+    description: article.description,
+
+    openGraph: {
+      type: "article",
+      siteName: "The Daily",
+      title: article.title,
+      description: article.description,
+      images: [
+        {
+          url: article.image,
+          alt: article.imageAlt,
+        },
+      ],
+    },
+  };
+}
+
+export default async function ArticleDetailPage({ params }: Props) {
   const { slug } = await params;
 
   const article = data.find((item) => item.slug === slug);
@@ -24,17 +57,19 @@ const ArticleDetailPage = async ({
     .toUpperCase();
 
   const moreArticles = data.filter(
-    (item) => item.category === article.category && item.slug !== slug,
+    (item) => item.category === article.category && item.slug !== article.slug,
   );
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-12">
+    <main id="top" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-12">
       <div>
         <Link href="/" className="h-[61px] gap-3 flex items-center">
           <span className="text-xs font-bold text-[#22241f]">
             ← All stories
           </span>
+
           <span className="text-xs text-[#65675f]">/</span>
+
           <span className="text-xs text-[#65675f]">{article.category}</span>
         </Link>
       </div>
@@ -82,6 +117,7 @@ const ArticleDetailPage = async ({
               <div className="text-[10px] font-bold text-[#65675f]">
                 PUBLISHED
               </div>
+
               <div className="text-sm text-[#22241f]">{article.date}</div>
             </div>
 
@@ -89,6 +125,7 @@ const ArticleDetailPage = async ({
               <div className="text-[10px] font-bold text-[#65675f]">
                 READING TIME
               </div>
+
               <div className="text-sm text-[#22241f]">1 min read</div>
             </div>
           </div>
@@ -134,14 +171,14 @@ const ArticleDetailPage = async ({
 
           <Link
             href="/"
-            className="shrink-0 border border-[#22241f] bg-[#22241f] rounded-full py-[10px] px-4 flex items-center justify-center text-white text-[12px]"
+            className="shrink-0 border border-[#22241f] bg-[#22241f] rounded-full py-[10px] px-4 flex items-center justify-center text-white text-[12px] hover:bg-[#c44724] hover:border-[#c44724] transition-colors duration-200"
           >
             All stories ↗
           </Link>
         </div>
       </div>
 
-      <div className="w-full pt-[40px] pb-[64px] gap-[28px] flex flex-col">
+      <section className="w-full pt-[40px] pb-[64px] gap-[28px] flex flex-col">
         <div className="w-full">
           <div className="text-[10px] text-[#c44724] font-bold">
             KEEP YOUR CURIOSITY GOING
@@ -150,6 +187,10 @@ const ArticleDetailPage = async ({
           <div className="font-bold text-[30px] text-[#22241f]">
             More to discover.
           </div>
+
+          <p className="text-sm text-[#65675f] mt-2">
+            More stories from {article.category}.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[28px]">
@@ -157,7 +198,7 @@ const ArticleDetailPage = async ({
             <ArticleCard key={item.id} {...item} />
           ))}
         </div>
-      </div>
+      </section>
 
       <footer className="w-full border-t border-[#e2e2da] flex flex-col sm:flex-row justify-between gap-4 py-[36px]">
         <div className="flex flex-col">
@@ -170,12 +211,13 @@ const ArticleDetailPage = async ({
           </div>
         </div>
 
-        <Link href="#top" className="text-[12px] text-[#22241f]">
+        <Link
+          href="#top"
+          className="text-[12px] text-[#22241f] hover:text-[#c44724] transition-colors"
+        >
           Back to top ↑
         </Link>
       </footer>
     </main>
   );
-};
-
-export default ArticleDetailPage;
+}

@@ -6,6 +6,7 @@ import data from "@/app/data/news.json";
 import { ArticleCard } from "@/app/components/ArticleCard";
 import Link from "next/link";
 
+
 const categories = [
   "All stories",
   "World",
@@ -16,6 +17,7 @@ const categories = [
   "Science",
   "Business",
 ];
+
 
 const Home = () => {
   const [activeCategory, setActiveCategory] = useState("All stories");

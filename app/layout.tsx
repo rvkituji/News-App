@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import data from "@/app/data/news.json";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,16 +13,40 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const firstArticle = data[0];
+
+
 export const metadata: Metadata = {
   title: {
     default: "The Daily — A fresh perspective",
     template: "%s | The Daily",
   },
+
   description:
-    "A little curiosity goes a long way. Explore 20 sample stories about design, technology, culture, and the world around us.",
+    "A little curiosity goes a long way. Explore stories about design, technology, culture, and the world around us.",
+
+  openGraph: {
+    type: "website",
+    siteName: "The Daily",
+    title: "The Daily — A fresh perspective",
+    description:
+      "A little curiosity goes a long way. Explore stories about design, technology, culture, and the world around us.",
+    images: firstArticle
+      ? [
+          {
+            url: firstArticle.image,
+            alt: firstArticle.imageAlt,
+          },
+        ]
+      : [],
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"
@@ -30,5 +55,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
-  
 }
